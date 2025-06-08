@@ -1,5 +1,3 @@
-import { Event } from './data';
-
 interface Order {
   id: string;
   eventId: string;

@@ -1,13 +1,13 @@
-'use client'
+'use client';
 
-import React, { useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import React, { Suspense, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { createOrderFromCheckout, addOrder } from '@/lib/orderStorage';
 
-export default function CheckoutPage() {
+// Extract the component that uses useSearchParams
+function CheckoutContent() {
   const searchParams = useSearchParams();
-  const router = useRouter();
   
   // Extract data from URL params
   const eventId = searchParams?.get('eventId') || '';
@@ -350,5 +350,14 @@ export default function CheckoutPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// Main page component with Suspense boundary
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={<div className="p-4 text-center">Loading checkout...</div>}>
+      <CheckoutContent />
+    </Suspense>
   );
 }

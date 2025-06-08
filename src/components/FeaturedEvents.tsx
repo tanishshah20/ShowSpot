@@ -3,7 +3,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { 
   getAllEvents,
-  type Event
 } from '@/lib/data';
 
 const EventCard: React.FC<{
@@ -36,7 +35,7 @@ const FeaturedEvents: React.FC = () => {
   const allEvents = getAllEvents();
   const randomEvents = useMemo(() => {
     return getRandomItems(allEvents, 3);
-  }, []);
+  }, [allEvents]); // Added allEvents to dependency array
 
   return (
     <section className="my-12">

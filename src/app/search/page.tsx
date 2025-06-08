@@ -1,6 +1,6 @@
-'use client'
+'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -13,21 +13,21 @@ import {
   type City 
 } from '@/lib/data';
 
-export default function SearchPage() {
+function SearchContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const query = searchParams?.get('q') || '';
   
-  const [searchTerm, setSearchTerm] = useState(query);
-  const [searchType, setSearchType] = useState<'events' | 'cities'>('events');
-  const [isLoading, setIsLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = React.useState(query);
+  const [searchType, setSearchType] = React.useState<'events' | 'cities'>('events');
+  const [isLoading, setIsLoading] = React.useState(false);
   
   // Get all events and cities
-  const allEvents = useMemo(() => getAllEvents(), []);
-  const allCities = useMemo(() => Object.values(cities), []);
+  const allEvents = React.useMemo(() => getAllEvents(), []);
+  const allCities = React.useMemo(() => Object.values(cities), []);
   
   // Filter based on search term
-  const filteredEvents = useMemo(() => {
+  const filteredEvents = React.useMemo(() => {
     if (!searchTerm.trim()) return [];
     
     const term = searchTerm.toLowerCase();
@@ -40,7 +40,7 @@ export default function SearchPage() {
     );
   }, [searchTerm, allEvents]);
   
-  const filteredCities = useMemo(() => {
+  const filteredCities = React.useMemo(() => {
     if (!searchTerm.trim()) return [];
     
     const term = searchTerm.toLowerCase();
@@ -51,7 +51,7 @@ export default function SearchPage() {
   }, [searchTerm, allCities]);
   
   // Update URL when search changes
-  useEffect(() => {
+  React.useEffect(() => {
     // If the search term is from URL, don't update URL
     if (searchTerm === query) return;
     
@@ -251,5 +251,13 @@ function CitySearchResult({ city }: CitySearchResultProps) {
         </div>
       </div>
     </Link>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<div className="p-4 text-center">Loading search results...</div>}>
+      <SearchContent />
+    </Suspense>
   );
 }

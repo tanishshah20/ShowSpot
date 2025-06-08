@@ -30,7 +30,7 @@ export default function CategoryPage({type}: {type: string}) {
     const events = getAllEvents();
     // Using 'Concerts' as a fixed category filter
     setFilteredEvents(filterEvents(events, type, dateFilter, sortOption));
-  }, [dateFilter, sortOption]); 
+  }, [dateFilter, sortOption, type]); 
 
   return (
     <div className="bg-white">

@@ -69,7 +69,7 @@ export default function LocationsPage() {
         
         {filteredCities.length === 0 ? (
           <div className="text-center py-8 bg-gray-50 rounded-lg">
-            <p className="text-gray-500">No cities found matching "{searchQuery}"</p>
+            <p className="text-gray-500">No cities found matching &quot;{searchQuery}&quot;</p>
             <button
               onClick={() => setSearchQuery('')}
               className="mt-2 text-blue-600 hover:text-blue-800"
