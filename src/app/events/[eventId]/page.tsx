@@ -61,26 +61,32 @@ export default function EventPage({ params }: { params: Promise<{ eventId: strin
     const section = ticketSections.find(s => s.id === selectedSection);
     if (!section) return;
     
-    const checkoutData = {
+    const subtotal = calculateTotal();
+    const fees = Math.round(subtotal * 0.15);
+    const total = Math.round(subtotal * 1.15);
+    
+    // Create checkout data with explicit types
+    const checkoutData: Record<string, string | number> = {
       eventId: event.id,
       eventName: event.title,
       eventDate: formatDate(event.date),
-      eventTime: event.time,
+      eventTime: event.time || "", // Handle possible undefined
       venue: event.venue,
       section: section.name,
       quantity: quantity,
       unitPrice: section.price,
-      subtotal: calculateTotal(),
-      fees: Math.round(calculateTotal() * 0.15),
-      total: Math.round(calculateTotal() * 1.15)
+      subtotal: subtotal,
+      fees: fees,
+      total: total
     };
     
     // Encode the checkout data in the URL
     const params = new URLSearchParams();
     
-    // Add each property to the URL parameters
+    // Add each property to the URL parameters with proper type checking
     Object.entries(checkoutData).forEach(([key, value]) => {
-      params.append(key, value.toString());
+      // Make sure value is converted to string properly
+      params.append(key, String(value));
     });
     
     // Navigate to checkout page with query parameters

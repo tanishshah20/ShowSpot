@@ -16,7 +16,7 @@ import {
 export default function SearchPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const query = searchParams.get('q') || '';
+  const query = searchParams?.get('q') || '';
   
   const [searchTerm, setSearchTerm] = useState(query);
   const [searchType, setSearchType] = useState<'events' | 'cities'>('events');

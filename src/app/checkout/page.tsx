@@ -10,17 +10,17 @@ export default function CheckoutPage() {
   const router = useRouter();
   
   // Extract data from URL params
-  const eventId = searchParams.get('eventId') || '';
-  const eventName = searchParams.get('eventName') || '';
-  const eventDate = searchParams.get('eventDate') || '';
-  const eventTime = searchParams.get('eventTime') || '';
-  const venue = searchParams.get('venue') || '';
-  const section = searchParams.get('section') || '';
-  const quantity = parseInt(searchParams.get('quantity') || '0');
-  const unitPrice = parseFloat(searchParams.get('unitPrice') || '0');
-  const subtotal = parseFloat(searchParams.get('subtotal') || '0');
-  const fees = parseFloat(searchParams.get('fees') || '0');
-  const total = parseFloat(searchParams.get('total') || '0');
+  const eventId = searchParams?.get('eventId') || '';
+  const eventName = searchParams?.get('eventName') || '';
+  const eventDate = searchParams?.get('eventDate') || '';
+  const eventTime = searchParams?.get('eventTime') || '';
+  const venue = searchParams?.get('venue') || '';
+  const section = searchParams?.get('section') || '';
+  const quantity = parseInt(searchParams?.get('quantity') || '0');
+  const unitPrice = parseFloat(searchParams?.get('unitPrice') || '0');
+  const subtotal = parseFloat(searchParams?.get('subtotal') || '0');
+  const fees = parseFloat(searchParams?.get('fees') || '0');
+  const total = parseFloat(searchParams?.get('total') || '0');
   
   // Form state
   const [formData, setFormData] = useState({
