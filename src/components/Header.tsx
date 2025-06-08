@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { MagnifyingGlassIcon, HeartIcon } from '@heroicons/react/24/outline';
 import MobileMenu from './MobileMenu';
 
+
 const Header: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   
@@ -60,16 +61,9 @@ const Header: React.FC = () => {
                 </Link>
               </div>
               
-              {/* Sell Button */}
-              <div className="hidden sm:block ml-4">
-                <Link href="/sell" className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded bg-gray-100 hover:bg-gray-200 text-gray-900">
-                  Sell
-                </Link>
-              </div>
-              
               {/* Heart Icon */}
               <div className="ml-4">
-                <Link href="/fav" className="p-1 text-gray-400 hover:text-gray-500">
+                <Link href="/wishlist" className="p-1 text-gray-400 hover:text-gray-500">
                   <HeartIcon className="h-6 w-6" aria-hidden="true" />
                 </Link>
               </div>

@@ -70,9 +70,6 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, setIsOpen }) => {
                   <Link href="/comedy" className="block px-3 py-2 rounded-md text-base font-medium text-gray-900 hover:bg-gray-100">
                     Comedy
                   </Link>
-                  <Link href="/sell" className="block px-3 py-2 rounded-md text-base font-medium text-gray-900 hover:bg-gray-100">
-                    Sell
-                  </Link>
                   <Link href="/profile" className="block px-3 py-2 border-t-2 border-t-black rounded-md text-base font-medium text-gray-900 hover:bg-gray-100">
                     Profile
                   </Link>

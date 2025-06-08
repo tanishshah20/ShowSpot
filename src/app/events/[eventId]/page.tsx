@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -11,15 +11,21 @@ import {
   getTicketSections,
   isEventHappeningSoon
 } from '@/lib/data';
+import { useWishlist } from '@/context/WishlistContext';
+import { useRouter } from 'next/navigation';
 
 export default function EventPage({ params }: { params: Promise<{ eventId: string }> }) {
+  const router = useRouter();
+  
   // Extract eventId using React.use
   const { eventId } = React.use(params);
   const event = events[eventId];
   
   const [quantity, setQuantity] = useState(2);
   const [selectedSection, setSelectedSection] = useState('');
-  const [isInWishlist, setIsInWishlist] = useState(false);
+  
+  // Use the wishlist context
+  const { isInWishlist, addToWishlist, removeFromWishlist } = useWishlist();
   
   // If the event doesn't exist, show 404 page
   if (!event) {
@@ -34,7 +40,11 @@ export default function EventPage({ params }: { params: Promise<{ eventId: strin
   
   // Toggle wishlist
   const toggleWishlist = () => {
-    setIsInWishlist(!isInWishlist);
+    if (isInWishlist(event.id)) {
+      removeFromWishlist(event.id);
+    } else {
+      addToWishlist(event);
+    }
   };
   
   // Calculate total price
@@ -42,6 +52,39 @@ export default function EventPage({ params }: { params: Promise<{ eventId: strin
     if (!selectedSection) return 0;
     const section = ticketSections.find(s => s.id === selectedSection);
     return section ? section.price * quantity : 0;
+  };
+  
+  // Handle checkout
+  const handleCheckout = () => {
+    if (!selectedSection) return;
+    
+    const section = ticketSections.find(s => s.id === selectedSection);
+    if (!section) return;
+    
+    const checkoutData = {
+      eventId: event.id,
+      eventName: event.title,
+      eventDate: formatDate(event.date),
+      eventTime: event.time,
+      venue: event.venue,
+      section: section.name,
+      quantity: quantity,
+      unitPrice: section.price,
+      subtotal: calculateTotal(),
+      fees: Math.round(calculateTotal() * 0.15),
+      total: Math.round(calculateTotal() * 1.15)
+    };
+    
+    // Encode the checkout data in the URL
+    const params = new URLSearchParams();
+    
+    // Add each property to the URL parameters
+    Object.entries(checkoutData).forEach(([key, value]) => {
+      params.append(key, value.toString());
+    });
+    
+    // Navigate to checkout page with query parameters
+    router.push(`/checkout?${params.toString()}`);
   };
   
   return (
@@ -189,6 +232,7 @@ export default function EventPage({ params }: { params: Promise<{ eventId: strin
             
             <div className="space-y-3">
               <button 
+                onClick={handleCheckout}
                 className={`w-full py-3 px-4 rounded font-medium ${
                   selectedSection 
                     ? 'bg-blue-600 hover:bg-blue-700 text-white' 
@@ -201,9 +245,26 @@ export default function EventPage({ params }: { params: Promise<{ eventId: strin
               
               <button 
                 onClick={toggleWishlist}
-                className="w-full bg-white hover:bg-gray-100 text-gray-800 font-medium py-3 px-4 rounded border border-gray-300"
+                className={`w-full py-3 px-4 rounded font-medium border flex items-center justify-center gap-2 ${
+                  isInWishlist(event.id)
+                    ? 'bg-pink-50 text-pink-700 border-pink-300 hover:bg-pink-100'
+                    : 'bg-white hover:bg-gray-100 text-gray-800 border-gray-300'
+                }`}
               >
-                {isInWishlist ? 'Remove from Wishlist' : 'Add to Wishlist'}
+                <svg 
+                  className={`h-5 w-5 ${isInWishlist(event.id) ? 'text-pink-600' : 'text-gray-500'}`} 
+                  fill="currentColor" 
+                  viewBox="0 0 20 20"
+                >
+                  <path 
+                    fillRule="evenodd" 
+                    d={isInWishlist(event.id) 
+                      ? "M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" 
+                      : "M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"} 
+                    clipRule="evenodd" 
+                  />
+                </svg>
+                {isInWishlist(event.id) ? 'Saved to Wishlist' : 'Add to Wishlist'}
               </button>
             </div>
             
