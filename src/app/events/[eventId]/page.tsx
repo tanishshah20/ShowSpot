@@ -1,65 +1,21 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-
-// Event data - in a real app, this would come from an API or database
-const eventData = {
-  'rolling-stones': {
-    id: 'rolling-stones',
-    title: 'The Rolling Stones',
-    description: 'The Rolling Stones are back on tour! Don\'t miss the unforgettable night of rock and roll.',
-    longDescription: 'Join the legendary Rolling Stones as they embark on their final world tour. Experience the magic of Mick Jagger, Keith Richards, and Ronnie Wood performing all their greatest hits live. From "Paint It Black" to "Satisfaction," this concert will feature the band\'s most iconic songs from their six-decade career. This is potentially your last chance to see the world\'s greatest rock and roll band live in concert!',
-    image: '/images/rolling-stones.jpg',
-    date: '2025-06-15',
-    time: '8:00 PM',
-    venue: 'Madison Square Garden',
-    location: 'New York, NY',
-    price: '$80 - $350',
-    category: 'Concerts',
-    tags: ['Rock', 'Classic Rock', 'Live Music'],
-    availability: 'Limited'
-  },
-  'lakers-warriors': {
-    id: 'lakers-warriors',
-    title: 'Lakers vs. Warriors',
-    description: 'See the showdown between the Lakers and Warriors. Witness the clash of titans in this thrilling basketball game.',
-    longDescription: 'Don\'t miss this epic NBA showdown between the Los Angeles Lakers and the Golden State Warriors. Watch as the league\'s biggest stars battle it out on the court in what promises to be one of the most exciting games of the season. With championship implications on the line, both teams will be bringing their A-game to this highly anticipated matchup. Get your tickets now to witness basketball history in the making!',
-    image: '/images/lakers-warriors.jpg',
-    date: '2025-06-20',
-    time: '7:30 PM',
-    venue: 'Staples Center',
-    location: 'Los Angeles, CA',
-    price: '$60 - $300',
-    category: 'Sports',
-    tags: ['NBA', 'Basketball', 'Lakers', 'Warriors'],
-    availability: 'Going Fast'
-  },
-  'phantom-opera': {
-    id: 'phantom-opera',
-    title: 'The Phantom of the Opera',
-    description: 'Experience Andrew Lloyd Webber\'s Phantom of the Opera. Classic musical that will leave you spellbound.',
-    longDescription: 'The Phantom of the Opera tells the tale of a disfigured musical genius known only as "The Phantom" who haunts the depths of the Paris Opera House. Mesmerized by the talent and beauty of a young soprano, Christine, The Phantom lures her as his protégé and falls fiercely in love with her. Unaware of Christine\'s love for Raoul, The Phantom\'s obsession sets the scene for a dramatic turn of events where jealousy, madness, and passions collide. Andrew Lloyd Webber\'s enthralling score includes "Think of Me," "Angel of Music," "Music of the Night," "All I Ask of You," "Masquerade," and the iconic title song.',
-    image: '/images/phantom-opera.jpg',
-    date: '2025-07-05',
-    time: '7:00 PM',
-    venue: 'Majestic Theatre',
-    location: 'New York, NY',
-    price: '$75 - $250',
-    category: 'Arts & Theater',
-    tags: ['Musical', 'Broadway', 'Theater'],
-    availability: 'Available'
-  }
-};
+import { 
+  events, 
+  formatDate, 
+  getRelatedEvents, 
+  getTicketSections,
+  isEventHappeningSoon
+} from '@/lib/data';
 
 export default function EventPage({ params }: { params: Promise<{ eventId: string }> }) {
   // Extract eventId using React.use
   const { eventId } = React.use(params);
-  const router = useRouter();
-  const event = eventData[eventId as keyof typeof eventData];
+  const event = events[eventId];
   
   const [quantity, setQuantity] = useState(2);
   const [selectedSection, setSelectedSection] = useState('');
@@ -70,33 +26,11 @@ export default function EventPage({ params }: { params: Promise<{ eventId: strin
     notFound();
   }
   
-  // Format date for display
-  const formatDate = (dateString: string) => {
-    const options: Intl.DateTimeFormatOptions = { 
-      weekday: 'long',
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
-    };
-    return new Date(dateString).toLocaleDateString('en-US', options);
-  };
+  // Get ticket sections for this event
+  const ticketSections = getTicketSections(event.id);
   
-  // Check if event is happening soon (within 1 week)
-  const isHappeningSoon = () => {
-    const eventDate = new Date(event.date);
-    const currentDate = new Date('2025-06-08'); // Using the date from user input
-    const timeDiff = eventDate.getTime() - currentDate.getTime();
-    const daysDiff = timeDiff / (1000 * 3600 * 24);
-    return daysDiff <= 7 && daysDiff >= 0;
-  };
-  
-  // Available ticket sections based on the event
-  const ticketSections = [
-    { id: 'vip', name: 'VIP Section', price: event.id === 'phantom-opera' ? 250 : (event.id === 'lakers-warriors' ? 300 : 350) },
-    { id: 'premium', name: 'Premium Seats', price: event.id === 'phantom-opera' ? 180 : (event.id === 'lakers-warriors' ? 220 : 250) },
-    { id: 'standard', name: 'Standard Admission', price: event.id === 'phantom-opera' ? 120 : (event.id === 'lakers-warriors' ? 150 : 160) },
-    { id: 'budget', name: 'Budget Friendly', price: event.id === 'phantom-opera' ? 75 : (event.id === 'lakers-warriors' ? 60 : 80) }
-  ];
+  // Get related events
+  const relatedEvents = getRelatedEvents(event.id, 3);
   
   // Toggle wishlist
   const toggleWishlist = () => {
@@ -125,9 +59,9 @@ export default function EventPage({ params }: { params: Promise<{ eventId: strin
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-center">
           <h1 className="text-white text-4xl md:text-5xl font-bold">{event.title}</h1>
           <p className="text-white text-lg mt-4">
-            {formatDate(event.date)} • {event.time} • {event.venue}, {event.location}
+            {formatDate(event.date, { weekday: 'long' })} • {event.time} • {event.venue}, {event.location}
           </p>
-          {isHappeningSoon() && (
+          {isEventHappeningSoon(event.date) && (
             <div className="mt-3 w-max inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
               Happening Soon!
             </div>
@@ -143,16 +77,18 @@ export default function EventPage({ params }: { params: Promise<{ eventId: strin
             <p className="text-gray-700">{event.longDescription}</p>
             
             {/* Tags */}
-            <div className="mt-6 flex flex-wrap gap-2">
-              {event.tags.map((tag, index) => (
-                <span 
-                  key={index}
-                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
+            {event.tags && (
+              <div className="mt-6 flex flex-wrap gap-2">
+                {event.tags.map((tag, index) => (
+                  <span 
+                    key={index}
+                    className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
             
             {/* Additional event details */}
             <div className="mt-8">
@@ -161,7 +97,7 @@ export default function EventPage({ params }: { params: Promise<{ eventId: strin
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <p className="text-gray-500 text-sm">Date and Time</p>
-                    <p className="font-medium">{formatDate(event.date)}, {event.time}</p>
+                    <p className="font-medium">{formatDate(event.date, { weekday: 'long' })}, {event.time}</p>
                   </div>
                   <div>
                     <p className="text-gray-500 text-sm">Location</p>
@@ -215,7 +151,6 @@ export default function EventPage({ params }: { params: Promise<{ eventId: strin
               ))}
             </div>
             
-            {/* Rest of the component remains the same */}
             {/* Quantity selector */}
             <div className="mb-6">
               <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 mb-2">
@@ -305,30 +240,28 @@ export default function EventPage({ params }: { params: Promise<{ eventId: strin
         <div className="mt-12">
           <h2 className="text-2xl font-bold mb-6">You Might Also Like</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {Object.values(eventData)
-              .filter(relatedEvent => relatedEvent.id !== eventId)
-              .map(relatedEvent => (
-                <Link href={`/events/${relatedEvent.id}`} key={relatedEvent.id}>
-                  <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 h-full">
-                    <div className="relative h-40">
-                      <Image
-                        src={relatedEvent.image}
-                        alt={relatedEvent.title}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                    <div className="p-4">
-                      <span className="inline-block px-2 py-1 text-xs font-semibold bg-blue-100 text-blue-800 rounded-md mb-2">
-                        {relatedEvent.category}
-                      </span>
-                      <h3 className="font-bold text-lg mb-1">{relatedEvent.title}</h3>
-                      <p className="text-sm text-gray-600">{formatDate(relatedEvent.date)}</p>
-                      <p className="text-sm text-gray-600">{relatedEvent.venue}, {relatedEvent.location}</p>
-                    </div>
+            {relatedEvents.map(relatedEvent => (
+              <Link href={`/events/${relatedEvent.id}`} key={relatedEvent.id}>
+                <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 h-full">
+                  <div className="relative h-40">
+                    <Image
+                      src={relatedEvent.image}
+                      alt={relatedEvent.title}
+                      fill
+                      className="object-cover"
+                    />
                   </div>
-                </Link>
-              ))}
+                  <div className="p-4">
+                    <span className="inline-block px-2 py-1 text-xs font-semibold bg-blue-100 text-blue-800 rounded-md mb-2">
+                      {relatedEvent.category}
+                    </span>
+                    <h3 className="font-bold text-lg mb-1">{relatedEvent.title}</h3>
+                    <p className="text-sm text-gray-600">{formatDate(relatedEvent.date)}</p>
+                    <p className="text-sm text-gray-600">{relatedEvent.venue}, {relatedEvent.location}</p>
+                  </div>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </div>

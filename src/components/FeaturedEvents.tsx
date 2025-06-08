@@ -1,5 +1,10 @@
+import React, { useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { 
+  getAllEvents,
+  type Event
+} from '@/lib/data';
 
 const EventCard: React.FC<{
   image: string;
@@ -22,39 +27,28 @@ const EventCard: React.FC<{
   );
 };
 
+const getRandomItems = <T,>(array: T[], count: number): T[] => {
+  const shuffled = [...array].sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, count);
+};
+
 const FeaturedEvents: React.FC = () => {
-  const events = [
-    {
-      image: "/images/rolling-stones.jpg",
-      title: "The Rolling Stones",
-      description: "The Rolling Stones are back on tour! Don't miss the unforgettable night of rock and roll.",
-      link: "/events/rolling-stones"
-    },
-    {
-      image: "/images/lakers-warriors.jpg",
-      title: "Lakers vs. Warriors",
-      description: "See the showdown between the Lakers and Warriors. Witness the clash of titans in this thrilling basketball game.",
-      link: "/events/lakers-warriors"
-    },
-    {
-      image: "/images/phantom-opera.jpg",
-      title: "The Phantom of the Opera",
-      description: "Experience Andrew Lloyd Webber's Phantom of the Opera. Classic musical that will leave you spellbound.",
-      link: "/events/phantom-opera"
-    }
-  ];
+  const allEvents = getAllEvents();
+  const randomEvents = useMemo(() => {
+    return getRandomItems(allEvents, 3);
+  }, []);
 
   return (
     <section className="my-12">
       <h2 className="text-2xl font-bold mb-6">Featured Events</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {events.map((event, index) => (
+        {randomEvents.map((event) => (
           <EventCard
-            key={index}
+            key={event.id}
             image={event.image}
             title={event.title}
             description={event.description}
-            link={event.link}
+            link={`/events/${event.id}`}
           />
         ))}
       </div>

@@ -1,88 +1,16 @@
 'use client'
 
-import { useState, useMemo } from 'react';
-import Link from 'next/link';
+import React, { useState, useMemo } from 'react';
 import Image from 'next/image';
-
-// City data - in a real app, this would come from an API or database
-const allCities = [
-  {
-    id: 'new-york',
-    name: 'New York',
-    image: '/images/city-newyork.jpg',
-    eventCount: 423
-  },
-  {
-    id: 'los-angeles',
-    name: 'Los Angeles',
-    image: '/images/city-losangeles.jpg',
-    eventCount: 318
-  },
-  {
-    id: 'chicago',
-    name: 'Chicago',
-    image: '/images/city-chicago.jpg',
-    eventCount: 256
-  },
-  {
-    id: 'san-francisco',
-    name: 'San Francisco',
-    image: '/images/city-sanfrancisco.jpg',
-    eventCount: 201
-  },
-  {
-    id: 'las-vegas',
-    name: 'Las Vegas',
-    image: '/images/city-lasvegas.jpg',
-    eventCount: 189
-  },
-  {
-    id: 'miami',
-    name: 'Miami',
-    image: '/images/city-more.jpg',
-    eventCount: 176
-  },
-  {
-    id: 'austin',
-    name: 'Austin',
-    image: '/images/city-more.jpg',
-    eventCount: 152
-  },
-  {
-    id: 'seattle',
-    name: 'Seattle',
-    image: '/images/city-more.jpg',
-    eventCount: 142
-  },
-  {
-    id: 'nashville',
-    name: 'Nashville',
-    image: '/images/city-more.jpg',
-    eventCount: 137
-  },
-  {
-    id: 'denver',
-    name: 'Denver',
-    image: '/images/city-more.jpg',
-    eventCount: 129
-  },
-  {
-    id: 'boston',
-    name: 'Boston',
-    image: '/images/city-more.jpg',
-    eventCount: 118
-  },
-  {
-    id: 'orlando',
-    name: 'Orlando',
-    image: '/images/city-more.jpg',
-    eventCount: 105
-  }
-];
+import Link from 'next/link';
+import { cities } from '@/lib/data';
 
 export default function LocationsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showAllCities, setShowAllCities] = useState(false);
+  
+  // Convert cities object to array for processing
+  const allCities = useMemo(() => Object.values(cities), []);
   
   // Filter cities based on search query
   const filteredCities = useMemo(() => {
@@ -94,7 +22,7 @@ export default function LocationsPage() {
     return allCities.filter(city => 
       city.name.toLowerCase().includes(query)
     );
-  }, [searchQuery]);
+  }, [allCities, searchQuery]);
   
   // Determine which cities to display
   const displayedCities = showAllCities 
@@ -126,22 +54,9 @@ export default function LocationsPage() {
                 placeholder="Enter city name"
               />
               <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
-                {searchQuery && (
-                  <button 
-                    onClick={() => setSearchQuery('')}
-                    className="text-gray-400 hover:text-gray-500"
-                  >
-                    <span className="sr-only">Clear search</span>
-                    <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                    </svg>
-                  </button>
-                )}
-                {!searchQuery && (
-                  <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                    <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
-                  </svg>
-                )}
+                <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+                </svg>
               </div>
             </div>
           </div>
@@ -166,21 +81,19 @@ export default function LocationsPage() {
           <>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
               {displayedCities.map((city) => (
-                <Link key={city.id} href={`/location/${city.id}`}>
-                  <div className="group relative rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 h-full">
-                    <div className="relative aspect-[4/3]">
+                <Link href={`/location/${city.id}`} key={city.id}>
+                  <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 h-full">
+                    <div className="relative h-32">
                       <Image
                         src={city.image}
                         alt={city.name}
                         fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                        className="object-cover"
                       />
-                      <div className="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-30 transition-opacity duration-300" />
-                      <div className="absolute inset-0 flex items-center justify-center text-white">
-                        <div className="text-center">
-                          <h3 className="text-xl font-bold">{city.name}</h3>
-                          <p className="text-sm mt-1">{city.eventCount} events</p>
-                        </div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                      <div className="absolute bottom-0 left-0 p-3 text-white">
+                        <h3 className="font-bold text-lg">{city.name}</h3>
+                        <p className="text-sm">{city.eventCount} Events</p>
                       </div>
                     </div>
                   </div>
@@ -199,13 +112,13 @@ export default function LocationsPage() {
                 </button>
               </div>
             )}
-            {!hasMoreCities && (
+            {!hasMoreCities && showAllCities && filteredCities.length > 5 && (
               <div className="text-center">
                 <button 
                   className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                   onClick={() => setShowAllCities(false)}
                 >
-                  View Less Cities
+                  Show Less
                 </button>
               </div>
             )}

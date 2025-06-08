@@ -57,7 +57,7 @@ const CategoryBrowser: React.FC = () => {
   return (
     <section className="my-12 pt-4">
       <h2 className="text-2xl font-bold mb-6">Browse by Category</h2>
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
         {categories.map((category, index) => (
           <CategoryCard
             key={index}
