@@ -10,15 +10,15 @@ const Footer: React.FC = () => {
           <Link href="/about-us" className="text-gray-700 hover:text-gray-900 text-sm sm:text-base">
             About Us
           </Link>
-          <Link href="/customer-support" className="text-gray-700 hover:text-gray-900 text-sm sm:text-base">
+          <div className="text-gray-700 hover:text-gray-900 cursor-pointer text-sm sm:text-base">
             Customer Support
-          </Link>
-          <Link href="/terms-of-service" className="text-gray-700 hover:text-gray-900 text-sm sm:text-base">
+          </div>
+          <div className="text-gray-700 hover:text-gray-900 cursor-pointer text-sm sm:text-base">
             Terms of Service
-          </Link>
-          <Link href="/privacy-policy" className="text-gray-700 hover:text-gray-900 text-sm sm:text-base">
+          </div>
+          <div className="text-gray-700 hover:text-gray-900 cursor-pointer text-sm sm:text-base">
             Privacy Policy
-          </Link>
+          </div>
         </div>
         
         {/* Social Media Icons */}

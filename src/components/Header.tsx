@@ -55,7 +55,7 @@ const Header: React.FC = () => {
             <div className="flex items-center">
               {/* Search Button */}
               <div className="ml-4">
-                <Link href="/search" className="inline-flex items-center p-1.5  rounded-full border border-transparent text-sm font-medium rounded bg-gray-100 hover:bg-gray-200 text-gray-900">
+                <Link href="/search" className="inline-flex items-center p-1.5  rounded-full border border-transparent text-sm font-medium  bg-gray-100 hover:bg-gray-200 text-gray-900">
                   <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
                 </Link>
               </div>
