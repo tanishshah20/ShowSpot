@@ -23,33 +23,24 @@ const Footer: React.FC = () => {
         
         {/* Social Media Icons */}
         <div className="flex justify-center space-x-6 mt-6">
-          <a
-            href="https://twitter.com/showspot"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray-700 hover:text-gray-900"
+          <div
+            className="text-gray-700 hover:text-gray-900 cursor-pointer"
             aria-label="Twitter"
           >
             <FaTwitter size={20} />
-          </a>
-          <a
-            href="https://instagram.com/showspot"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray-700 hover:text-gray-900"
+          </div>
+          <div
+            className="text-gray-700 hover:text-gray-900 cursor-pointer"
             aria-label="Instagram"
           >
             <FaInstagram size={20} />
-          </a>
-          <a
-            href="https://facebook.com/showspot"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray-700 hover:text-gray-900"
+          </div>
+          <div
+            className="text-gray-700 hover:text-gray-900 cursor-pointer"
             aria-label="Facebook"
           >
             <FaFacebook size={20} />
-          </a>
+          </div>
         </div>
         
         {/* Copyright */}

@@ -42,6 +42,12 @@ const Header: React.FC = () => {
                 <Link href="/arts-theater" className="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium">
                   Arts & Theater
                 </Link>
+                <Link href="/festivals" className="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium">
+                  Festivals
+                </Link>
+                <Link href="/comedy" className="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium">
+                  Comedy
+                </Link>
               </nav>
             </div>
             

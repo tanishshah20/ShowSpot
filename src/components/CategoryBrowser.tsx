@@ -30,27 +30,27 @@ const CategoryBrowser: React.FC = () => {
     {
       image: "/images/category-concerts.jpg",
       title: "Concerts",
-      link: "/category/concerts"
+      link: "/concerts"
     },
     {
       image: "/images/category-sports.jpg",
       title: "Sports",
-      link: "/category/sports"
+      link: "/sports"
     },
     {
       image: "/images/category-arts.jpg",
       title: "Arts & Theater",
-      link: "/category/arts-theater"
+      link: "/arts-theater"
     },
     {
       image: "/images/category-festivals.jpg",
       title: "Festivals",
-      link: "/category/festivals"
+      link: "/festivals"
     },
     {
       image: "/images/category-comedy.jpg",
       title: "Comedy",
-      link: "/category/comedy"
+      link: "/comedy"
     },
   ];
 

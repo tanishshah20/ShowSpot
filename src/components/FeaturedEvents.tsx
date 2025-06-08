@@ -58,6 +58,9 @@ const FeaturedEvents: React.FC = () => {
           />
         ))}
       </div>
+      <div className='flex justify-center mt-4'>
+        <Link href="/events" className="text-base text-center underline">View More</Link>
+      </div>
     </section>
   );
 };

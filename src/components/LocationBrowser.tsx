@@ -50,7 +50,7 @@ const LocationBrowser: React.FC = () => {
     {
       image: "/images/city-more.jpg",
       city: "More",
-      link: "/locations"
+      link: "/location"
     }
   ];
 
