@@ -1,10 +1,18 @@
-import React from 'react';
+import HeroSection from '@/components/HeroSection';
+import FeaturedEvents from '@/components/FeaturedEvents';
+import CategoryBrowser from '@/components/CategoryBrowser';
+import LocationBrowser from '@/components/LocationBrowser';
 
 export default function Home() {
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold">Welcome to ShowSpot</h1>
-      <p className="mt-4">Find the best events near you.</p>
+    <div className="bg-white min-h-screen">
+      <HeroSection />
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <FeaturedEvents />
+        <CategoryBrowser />
+        <LocationBrowser />
+      </div>
     </div>
   );
 }
